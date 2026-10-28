@@ -8,7 +8,7 @@ Userscript for displaying episode, show, and movie ratings directly over cover i
 
 ## Installation
 
-1. Make sure you have a free, open-source userscript manager installed, such as **Violentmonkey**.
+1. Install the [Violentmonkey](https://violentmonkey.github.io/) browser extension.
 2. Install the script directly from [Greasy Fork](https://greasyfork.org/en/scripts/602631).
 3. Open `https://app.trakt.tv/` and enjoy the ratings!
 
