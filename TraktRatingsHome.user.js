@@ -11,13 +11,15 @@
 // @run-at       document-idle
 // @license      GPL-3.0-or-later
 // @icon         https://github.com/amiad/TraktRatingsHome/blob/master/star.png?raw=true
+// @downloadURL https://update.greasyfork.org/scripts/602631/Trakttv%20Ratings%20on%20Home%20Cards.user.js
+// @updateURL https://update.greasyfork.org/scripts/602631/Trakttv%20Ratings%20on%20Home%20Cards.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
     const CACHE_TTL = 24 * 60 * 60 * 1000;
-    const TRAKT_CLIENT_ID = '201dc70c5ec6af530f12f079ea1922733f6e1085ad7b02f36d8e011b75bcea7d';
+    const TRAKT_CLIENT_ID = 'desNaqsfyR-8PvCKjUrHi3auQMg8xUL5xdO9_A-bauw';
 
     function getCardMediaInfo(card) {
         const episodeLink = card.querySelector('a[href*="view=episode"]');
