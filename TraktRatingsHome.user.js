@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Trakt.tv Ratings on Home Cards
 // @namespace    TraktRatingsHome
-// @version      7.8
+// @version      7.8.1
 // @description  Display episode, show, and movie ratings over cover images on Trakt.tv home page.
 // @author       You
 // @match        https://app.trakt.tv/*
