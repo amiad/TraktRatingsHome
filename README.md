@@ -1,6 +1,6 @@
 # Trakt.tv Ratings on Home Cards
 
-Userscript for displaying episode, show, and movie ratings directly over cover images on the Trakt.tv home page.
+Userscript for displaying episode, show, and movie ratings directly over cover images on Trakt.tv.
 
 ## Preview
 

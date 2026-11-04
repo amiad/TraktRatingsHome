@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Trakt.tv Ratings on Home Cards
+// @name         Trakt.tv Ratings on Cards
 // @namespace    TraktRatingsHome
-// @version      7.8.1
-// @description  Display episode, show, and movie ratings over cover images on Trakt.tv home page.
-// @author       You
+// @version      7.9
+// @description  Display episode, show, season, and movie ratings over cover images on Trakt.tv.
+// @author       Amiad
 // @match        https://app.trakt.tv/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
@@ -38,6 +38,20 @@
             }
         }
 
+        const seasonLink = card.querySelector('a[href*="season="]');
+        if (seasonLink) {
+            const showMatch = seasonLink.href.match(/\/shows\/([^\?\/]+)/);
+            const seasonMatch = seasonLink.href.match(/season=([0-9]+)/);
+
+            if (showMatch && seasonMatch) {
+                return {
+                    type: 'season',
+                    slug: showMatch[1],
+                    season: seasonMatch[1]
+                };
+            }
+        }
+
         const mediaLink = card.querySelector('a[href*="/shows/"], a[href*="/movies/"]');
         if (mediaLink) {
             const showMatch = mediaLink.href.match(/\/shows\/([^\?\/]+)/);
@@ -61,6 +75,9 @@
         if (mediaInfo.type === 'episode') {
             cacheKey = `trakt_api_ep_${mediaInfo.slug}_s${mediaInfo.season}e${mediaInfo.episode}`;
             apiUrl = `https://api.trakt.tv/shows/${mediaInfo.slug}/seasons/${mediaInfo.season}/episodes/${mediaInfo.episode}/ratings`;
+        } else if (mediaInfo.type === 'season') {
+            cacheKey = `trakt_api_season_${mediaInfo.slug}_s${mediaInfo.season}`;
+            apiUrl = `https://api.trakt.tv/shows/${mediaInfo.slug}/seasons?extended=full`;
         } else if (mediaInfo.type === 'show') {
             cacheKey = `trakt_api_show_${mediaInfo.slug}`;
             apiUrl = `https://api.trakt.tv/shows/${mediaInfo.slug}/ratings`;
@@ -94,6 +111,26 @@
                     if (response.status === 200) {
                         try {
                             const data = JSON.parse(response.responseText);
+
+                            if (mediaInfo.type === 'season' && Array.isArray(data)) {
+                                const targetSeasonNum = parseInt(mediaInfo.season, 10);
+                                const foundSeason = data.find(s => s.number === targetSeasonNum);
+
+                                if (foundSeason && typeof foundSeason.rating === 'number' && foundSeason.rating > 0) {
+                                    const percentage = Math.round(foundSeason.rating * 10);
+                                    const ratingStr = `${percentage}%`;
+
+                                    localStorage.setItem(cacheKey, JSON.stringify({
+                                        rating: ratingStr,
+                                        timestamp: Date.now()
+                                    }));
+                                    resolve(ratingStr);
+                                    return;
+                                }
+                                resolve(null);
+                                return;
+                            }
+
                             if (data && typeof data.rating === 'number' && data.rating > 0) {
                                 const percentage = Math.round(data.rating * 10);
                                 const ratingStr = `${percentage}%`;
